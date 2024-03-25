@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define a structure for a node
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to insert a new node at the beginning of the linked list
+void insertAtBeginning(struct Node** head, int newData) {
+    // Allocate memory for new node
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Assign data to new node
+    newNode->data = newData;
+    // Link the new node to the current head
+    newNode->next = *head;
+    // Update the head to point to the new node
+    *head = newNode;
+}
+
+// Function to insert a new node at the end of the linked list
+void insertAtEnd(struct Node** head, int newData) {
+    // Allocate memory for new node
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Assign data to new node
+    newNode->data = newData;
+    // Since it's the last node, set its next to NULL
+    newNode->next = NULL;
+
+    // If the list is empty, make the new node the head
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    // Traverse the list to find the last node
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    // Link the last node to the new node
+    temp->next = newNode;
+}
+
+// Function to delete a node with given key from the linked list
+void deleteNode(struct Node** head, int key) {
+    // If the list is empty, return
+    if (*head == NULL) {
+        printf("List is empty. Deletion failed.\n");
+        return;
+    }
+
+    // If the key is at the head node
+    if ((*head)->data == key) {
+        struct Node* temp = *head;
+        *head = (*head)->next;
+        free(temp);
+        printf("Node with data %d deleted.\n", key);
+        return;
+    }
+
+    // Find the previous node of the node to be deleted
+    struct Node* temp = *head;
+    while (temp->next != NULL && temp->next->data != key) {
+        temp = temp->next;
+    }
+
+    // If key was not present in the linked list
+    if (temp->next == NULL) {
+        printf("Node with data %d not found. Deletion failed.\n", key);
+        return;
+    }
+
+    // Unlink the node from linked list
+    struct Node* nodeToDelete = temp->next;
+    temp->next = temp->next->next;
+
+    // Free the memory
+    free(nodeToDelete);
+    printf("Node with data %d deleted.\n", key);
+}
+
+// Function to display the linked list
+void display(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    printf("Linked list elements: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+
+    // Insert some nodes
+    insertAtEnd(&head, 1);
+    insertAtEnd(&head, 2);
+    insertAtEnd(&head, 3);
+
+    // Display the linked list
+    display(head);
+
+    // Insert a node at the beginning
+    insertAtBeginning(&head, 0);
+    // Display the linked list
+    display(head);
+
+    // Delete a node
+    deleteNode(&head, 2);
+    // Display the linked list
+    display(head);
+
+    return 0;
+}
