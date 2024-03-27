@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 100
+
+// Structure to represent queue
+struct Queue {
+    int front, rear;
+    int items[MAX_SIZE];
+};
+
+// Function prototypes
+void enqueue(struct Queue *q, int value);
+int dequeue(struct Queue *q);
+void display(struct Queue *q);
+int isEmpty(struct Queue *q);
+int isFull(struct Queue *q);
+
+int main() {
+    struct Queue q = { .front = -1, .rear = -1 };
+
+    // Example of queue operations
+    enqueue(&q, 10);
+    enqueue(&q, 20);
+    enqueue(&q, 30);
+    display(&q);
+    
+    printf("Dequeued element: %d\n", dequeue(&q));
+    printf("Dequeued element: %d\n", dequeue(&q));
+    display(&q);
+
+    return 0;
+}
+
+// Function to add an element to the queue (enqueue)
+void enqueue(struct Queue *q, int value) {
+    if (isFull(q)) {
+        printf("Queue Overflow\n");
+        exit(EXIT_FAILURE);
+    }
+    if (isEmpty(q)) {
+        q->front = 0; // Start the queue
+    }
+    q->items[++(q->rear)] = value;
+}
+
+// Function to remove an element from the queue (dequeue)
+int dequeue(struct Queue *q) {
+    if (isEmpty(q)) {
+        printf("Queue Underflow\n");
+        exit(EXIT_FAILURE);
+    }
+    int dequeuedItem = q->items[q->front];
+    if (q->front == q->rear) {
+        // Queue becomes empty after dequeue
+        q->front = q->rear = -1;
+    } else {
+        (q->front)++;
+    }
+    return dequeuedItem;
+}
+
+// Function to display the elements of the queue
+void display(struct Queue *q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty\n");
+        return;
+    }
+    printf("Queue elements: ");
+    for (int i = q->front; i <= q->rear; i++) {
+        printf("%d ", q->items[i]);
+    }
+    printf("\n");
+}
+
+// Function to check if the queue is empty
+int isEmpty(struct Queue *q) {
+    return q->front == -1;
+}
+
+// Function to check if the queue is full
+int isFull(struct Queue *q) {
+    return q->rear == MAX_SIZE - 1;
+}
